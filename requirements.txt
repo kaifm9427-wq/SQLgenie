@@ -30,6 +30,7 @@ cryptography>=42.0.0   # Secure Password Hashing / Auth for Database connections
 # SECURITY & UTILITIES
 # ==========================================
 python-dotenv>=1.0.1
+PyJWT>=2.8.0
 
 # ==========================================
 # RAG & VECTOR SEARCH
