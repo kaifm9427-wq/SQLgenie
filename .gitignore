@@ -1,0 +1,21 @@
+# Environment variables
+.env
+
+# Local SQLite databases
+*.db
+users.db
+sandbox.db
+
+# Python caches
+__pycache__/
+*.pyc
+
+# IDE files
+.DS_Store
+.vscode/
+
+# Secrets / credentials
+seed_demo.sql
+
+# Vector store (auto-rebuilt)
+chroma_db/

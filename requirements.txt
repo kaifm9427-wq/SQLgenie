@@ -1,0 +1,40 @@
+# ==========================================
+# CORE API BACKEND FRAMEWORK
+# ==========================================
+fastapi>=0.110.0
+uvicorn>=0.28.0
+pydantic>=2.6.0
+
+# ==========================================
+# LANGCHAIN & AGENTIC AI FRAMEWORK
+# ==========================================
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-community>=0.3.0
+langchain-ollama>=0.1.0
+langchain-groq>=0.1.0
+
+# ==========================================
+# DATABASE ORM & CONFIGURATION
+# ==========================================
+SQLAlchemy>=2.0.0
+
+# ==========================================
+# DATABASE DRIVERS (For Multi-DB Support)
+# ==========================================
+psycopg2-binary>=2.9.9  # PostgreSQL Connector
+pymysql>=1.1.0         # MySQL Connector
+cryptography>=42.0.0   # Secure Password Hashing / Auth for Database connections
+
+# ==========================================
+# SECURITY & UTILITIES
+# ==========================================
+python-dotenv>=1.0.1
+
+# ==========================================
+# RAG & VECTOR SEARCH
+# ==========================================
+chromadb>=1.5.0
+langchain-chroma>=1.0.0
+sentence-transformers>=3.0.0
+langchain-huggingface>=0.1.0
