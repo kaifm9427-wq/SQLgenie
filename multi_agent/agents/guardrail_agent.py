@@ -40,7 +40,8 @@ class GuardrailAgent(BaseAgent):
         for pat in _DESTRUCTIVE:
             if re.search(pat, q):
                 state.status = "blocked"
-                state.block_reason = f"Request blocked: keyword '{pat.strip('\\\\b')}' detected."
+                keyword = pat.replace(r"\b", "")
+                state.block_reason = f"Request blocked: keyword '{keyword}' detected."
                 state.log(self.name, "Blocked", error=state.block_reason)
                 return
 

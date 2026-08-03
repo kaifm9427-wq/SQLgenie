@@ -14,6 +14,7 @@ from collections import defaultdict
 from db_utils import get_db_schema_context, execute_query, validate_db_connection
 from multi_agent.orchestrator import Supervisor
 from mail_utils import send_event_email
+from seed_demo_db import seed_demo_db
 import auth_db
 
 
@@ -83,6 +84,9 @@ def check_rate_limit(request: Request):
 # Default database URI (Use local SQLite database sandbox)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_URI = "sqlite:///sandbox.db"
+
+# Ensure the demo database exists so a fresh deployment works immediately
+seed_demo_db()
 
 
 def resolve_sqlite_path(db_path: str) -> str:
@@ -209,6 +213,11 @@ def get_index():
     if os.path.exists("static/index.html"):
         return FileResponse("static/index.html")
     return HTMLResponse("<h1>SQL Genie Backend is Running.</h1><p>Please create index.html in the static folder.</p>")
+
+@app.get("/health")
+def health():
+    """Lightweight health check for platform probes and keep-alive pings."""
+    return {"status": "ok"}
 
 # --- Authentication API Routes ---
 
