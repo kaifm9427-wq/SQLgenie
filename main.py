@@ -478,6 +478,13 @@ def run_query(request: QueryRequest, req: Request,
                 "message": f"The query took longer than {EXEC_TIMEOUT}s and was cancelled. Try simplifying your question or using a faster LLM provider.",
                 "logs": []
             }
+        except Exception as e:
+            return {
+                "success": False,
+                "error_type": "llm_failure",
+                "message": f"LLM provider error: {e}",
+                "logs": [],
+            }
 
     # Store conversation turn
     _add_to_conversation(cid, "user", request.query)
