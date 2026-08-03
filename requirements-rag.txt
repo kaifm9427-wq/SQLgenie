@@ -1,0 +1,18 @@
+# ==========================================
+# RAG & VECTOR SEARCH (heavy — optional)
+# ==========================================
+# The core app runs fine without these: RAG is skipped automatically when
+# these packages are missing. Install them locally (or on a host with
+# enough RAM/CPU) to enable schema vector-indexing and self-learning.
+#
+#   pip install -r requirements-rag.txt
+#
+# Do NOT install on 512MB free-tier hosts (Render/Koyeb) — importing torch
+# via sentence-transformers OOMs the process.
+#
+-r requirements.txt
+
+chromadb>=1.5.0
+langchain-chroma>=1.0.0
+sentence-transformers>=3.0.0
+langchain-huggingface>=0.1.0

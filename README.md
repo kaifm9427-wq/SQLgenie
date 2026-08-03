@@ -117,6 +117,7 @@ cd SQLgenie
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+pip install -r requirements-rag.txt  # optional: RAG vector indexing (heavy)
 
 # Configure
 cp .env.example .env   # add your GROQ_API_KEY and AUTH_DATABASE_URL

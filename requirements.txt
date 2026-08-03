@@ -31,11 +31,3 @@ cryptography>=42.0.0   # Secure Password Hashing / Auth for Database connections
 # ==========================================
 python-dotenv>=1.0.1
 PyJWT>=2.8.0
-
-# ==========================================
-# RAG & VECTOR SEARCH
-# ==========================================
-chromadb>=1.5.0
-langchain-chroma>=1.0.0
-sentence-transformers>=3.0.0
-langchain-huggingface>=0.1.0
