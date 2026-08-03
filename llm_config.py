@@ -125,7 +125,7 @@ def get_llm(provider: str = None, model_name: str = None) -> BaseChatModel:
 
     # Resolve model name based on provider
     if provider == "groq":
-        resolved_model = model_name or os.getenv("GROQ_MODEL", "llama-3.3-70b-specdec")
+        resolved_model = model_name or os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
     elif provider == "ollama":
         resolved_model = model_name or os.getenv("OLLAMA_MODEL", "qwen2.5-coder:latest")
     else:
