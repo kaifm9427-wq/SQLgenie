@@ -23,7 +23,19 @@ from langchain_core.embeddings import Embeddings
 _EMBEDDER_CACHE: dict = {}
 
 
-def get_embedder(provider: Optional[str] = None, model: Optional[str] = None) -> Embeddings:
+def _total_memory_mb() -> int:
+    """Total system RAM in MB. Returns 0 when it cannot be determined."""
+    try:
+        if hasattr(os, "sysconf"):
+            page = os.sysconf("SC_PAGE_SIZE")
+            pages = os.sysconf("SC_PHYS_PAGES")
+            return (page * pages) // (1024 * 1024)
+    except Exception:
+        pass
+    return 0
+
+
+def get_embedder(provider: Optional[str] = None, model: Optional[str] = None) -> Optional[Embeddings]:
     """
     Return a cached Embeddings instance for the given provider.
 
@@ -31,8 +43,12 @@ def get_embedder(provider: Optional[str] = None, model: Optional[str] = None) ->
     across all call sites — retriever, self-learning, index status checks.
 
     Args:
-        provider: "ollama" | "huggingface" | None (defaults to huggingface).
+        provider: "ollama" | "huggingface" | "none" | None (defaults to huggingface).
         model:   Optional model override.
+
+    Returns:
+        An Embeddings instance, or None when RAG embeddings are disabled
+        (provider "none", or a low-memory host with the default provider).
 
     Raises:
         ImportError if the required package is not installed.
@@ -45,12 +61,25 @@ def get_embedder(provider: Optional[str] = None, model: Optional[str] = None) ->
     if cached is not None:
         return cached
 
+    # Explicit opt-out of the local RAG embedder.
+    if provider in ("none", "disabled"):
+        return None
+
+    # Free-tier hosts (Render/Koyeb ~512MB) get OOM-killed when importing
+    # torch via sentence-transformers. Auto-disable the local embedder on
+    # low-memory machines unless the user explicitly opts in.
+    total_mb = _total_memory_mb()
+    if provider == "huggingface" and os.getenv("EMBEDDER_PROVIDER") is None and (total_mb == 0 or total_mb < 2048):
+        print("⚠️ Low-memory host detected: local embeddings disabled (RAG skipped). "
+              "Set EMBEDDER_PROVIDER=huggingface to force.")
+        return None
+
     if provider == "ollama":
         embedder = _ollama_embedder(model)
     elif provider == "huggingface":
         embedder = _hf_embedder(model)
     else:
-        raise ValueError(f"Unknown embedder provider: {provider}. Use 'ollama' or 'huggingface'.")
+        raise ValueError(f"Unknown embedder provider: {provider}. Use 'ollama', 'huggingface', or 'none'.")
 
     _EMBEDDER_CACHE[cache_key] = embedder
     return embedder

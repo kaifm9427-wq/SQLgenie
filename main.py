@@ -27,6 +27,8 @@ def index_database_for_uri(db_uri: str) -> dict:
         from multi_agent.retrieval.indexer import index_database
         embedder = get_embedder(provider=os.getenv("EMBEDDER_PROVIDER", "huggingface"),
                                 model=os.getenv("EMBEDDER_MODEL"))
+        if embedder is None:
+            return {"success": False, "error": "RAG embeddings are disabled on this host."}
         store = index_database(db_uri, embedder, force_rebuild=True)
         return {"success": True, "indexed": bool(store.load())}
     except Exception as e:
@@ -41,6 +43,8 @@ def get_index_status(db_uri: str) -> dict:
         from multi_agent.retrieval.indexer import collection_name_for
         embedder = get_embedder(provider=os.getenv("EMBEDDER_PROVIDER", "huggingface"),
                                 model=os.getenv("EMBEDDER_MODEL"))
+        if embedder is None:
+            return {"indexed": False, "document_count": 0}
         cname = collection_name_for(db_uri)
         store = VectorStore(embedder, collection_name=cname)
         has_index = store.load()

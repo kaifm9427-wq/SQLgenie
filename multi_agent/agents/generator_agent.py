@@ -23,13 +23,17 @@ from db_utils import get_db_schema_context
 
 def _build_retriever(db_uri: str):
     try:
-        from multi_agent.retrieval import RetrievalPipeline
         from multi_agent.retrieval.embedder import get_embedder
-        from multi_agent.retrieval.vector_store import VectorStore
-        from multi_agent.retrieval.indexer import collection_name_for
 
         embedder = get_embedder(provider=os.getenv("EMBEDDER_PROVIDER", "huggingface"),
                                 model=os.getenv("EMBEDDER_MODEL"))
+        if embedder is None:
+            return None
+
+        from multi_agent.retrieval import RetrievalPipeline
+        from multi_agent.retrieval.vector_store import VectorStore
+        from multi_agent.retrieval.indexer import collection_name_for
+
         cname = collection_name_for(db_uri)
         store = VectorStore(embedder, collection_name=cname)
         if not store.load():

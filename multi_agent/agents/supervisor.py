@@ -34,6 +34,8 @@ def _learn_from_success(state: AgentState) -> None:
 
         embedder = get_embedder(provider=os.getenv("EMBEDDER_PROVIDER", "huggingface"),
                                 model=os.getenv("EMBEDDER_MODEL"))
+        if embedder is None:
+            return
         cname = collection_name_for(state.db_uri)
         store = VectorStore(embedder, collection_name=cname)
         if not store.load():
